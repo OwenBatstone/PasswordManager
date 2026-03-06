@@ -9,9 +9,9 @@ class HomePage extends StatelessWidget{
   @override
   Widget build(BuildContext context){ 
     final List<PasswordEntry> passwords = [
-      PasswordEntry(website: "Google", password: "abc123"),
-      PasswordEntry(website: "Amazon", password: "qwerty!"),
-      PasswordEntry(website: "GitHub", password: "Dev@2024"),
+      PasswordEntry(website: "Google", password: "abc123", username: "abc"),
+      PasswordEntry(website: "Amazon", password: "qwerty!", username: "abc"),
+      PasswordEntry(website: "GitHub", password: "Dev@2024", username: "abc"),
     ];
       return Scaffold(
         appBar: AppBar(
