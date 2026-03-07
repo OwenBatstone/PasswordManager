@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/nav_bar.dart';
+import 'package:flutter_app/pages/signup_page.dart';
+
 
 
 class LoginPage extends StatefulWidget{ 
@@ -63,16 +66,32 @@ Widget build(BuildContext context) {
                 }
                 ),
                 const SizedBox(height: 20), 
+                //elevated button for submit information
                 ElevatedButton(onPressed: () {
                   if( formKey.currentState!.validate()){ 
-                    //TODO CREATE new class with login logic
+                    //add   new class with login logic
                     // Steps planned to implement
                     // hash then encrypt then compare to database 
                     // could aso hash email if we really want?
-                    print('Email:${emailController.text}');
+                    
                   }
+                  Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const NavBar()
+                  ));
                 }, 
                 child: const Text('Login'),
+                ),
+                const SizedBox(height: 20), 
+                ElevatedButton(onPressed: (){  
+                 Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SignupPage()
+                  ));
+                  
+                },
+                child: const Text("Sign up"),
+                
                 )
           ],
         ),

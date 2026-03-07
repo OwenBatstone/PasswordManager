@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import '../pages/nav_bar.dart';
-import '../supabase_functions/initlilize_supabase.dart';
+import 'package:flutter_app/pages/login_page.dart';
+
+import '../supabase_functions/initalize_supabase.dart';
 void main() async{
   await initSupabase();
   runApp(const MyApp());
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //test   Passwords 
     return const MaterialApp(
-      home:NavBar(),
+      home:LoginPage(),
     );
   }
 }

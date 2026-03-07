@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/add_new_sites.dart';
 import '../pages/home_page.dart';
 import '../pages/login_page.dart';
 
@@ -16,6 +17,7 @@ int currentIndex = 0;
 
 final List<Widget> pages = const[ 
   HomePage(),
+  AddNewSites(),
   LoginPage(),
 ];
 
@@ -26,13 +28,24 @@ Widget build(BuildContext context) {
     bottomNavigationBar: BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: (index){ 
+        if ( index == 2 ) { 
+            Navigator.pushAndRemoveUntil(context,
+            MaterialPageRoute(builder: (context) => LoginPage())
+             ,(route) => false,
+            );
+            return; 
+          }
+        
         setState(() {
-          currentIndex = index; 
+          //log out
+         currentIndex = index;
+          
         });
       },
       items: const[ 
         BottomNavigationBarItem(icon: Icon(Icons.home), label :'Home'), 
-        BottomNavigationBarItem(icon: Icon(Icons.lock), label : 'Login')
+        BottomNavigationBarItem(icon: Icon(Icons.add), label : " Add Password"),
+        BottomNavigationBarItem(icon: Icon(Icons.logout), label : 'Log Out')
       ]
       ),
   );
