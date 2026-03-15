@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../login/sign_up.dart';
 import 'package:flutter_app/pages/login_page.dart';
 
 
@@ -66,16 +66,31 @@ class _SignupPage extends State<SignupPage> {
               const SizedBox( // sized box for elevated button for submit
                 height: 20,
               ), 
-              ElevatedButton(onPressed: () {
-                  if(formKey.currentState!.validate()){ 
-                    // ADD Signup Logic
-                 Navigator.pushAndRemoveUntil(context,
-                  MaterialPageRoute(builder: (context) => SignupPage()),
-                   (route) => false,
+              ElevatedButton(
+                onPressed: () async {
+                if (formKey.currentState!.validate()) {
+                  try {
+                  await signUpWithEmail(
+                    emailController.text.trim(),
+                    passwordController.text,
+                  );
+                if (!context.mounted) return;
+                // Success — send them to login
+                Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+                (route) => false,
                 );
-                  } 
-              }, 
-              child: Text("SignUp")
+                } catch (e) {
+                if (!context.mounted) return;
+                  // Show error to user
+                ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(e.toString())),
+                );
+              }
+              }
+              },
+              child: const Text("Sign Up"),
               ), 
               const SizedBox(
                 height: 20
@@ -85,9 +100,6 @@ class _SignupPage extends State<SignupPage> {
                   MaterialPageRoute(builder: (context) => LoginPage()),
                    (route) => false,
                 );
-
-
-
               },
               child: Text("Login") 
               ),
