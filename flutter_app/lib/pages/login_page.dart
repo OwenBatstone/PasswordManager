@@ -34,7 +34,7 @@ Future<void> _loginStates() async {
     await signInWithEmail(email, password);
 
     if (mounted) { 
-        Navigator.pushReplacement(
+        Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => NavBar()),
         );
@@ -118,7 +118,7 @@ Widget build(BuildContext context) {
                   ),
                 const SizedBox(height: 20), 
                 ElevatedButton(onPressed: (){  
-                 Navigator.pushReplacement(
+                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SignupPage()
                   ));

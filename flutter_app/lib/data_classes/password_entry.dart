@@ -10,4 +10,12 @@ class PasswordEntry {
     required this.password,
     required this.username
   });
+
+  factory PasswordEntry.fromMap(Map<String, dynamic> map) { 
+    return PasswordEntry(
+      website: map['service_name'] ?? '', 
+      password: map['password'] ?? '', 
+      username: map['username'] ?? ''
+      );
+  }
 }

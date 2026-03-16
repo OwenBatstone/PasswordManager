@@ -1,16 +1,15 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 
-Future<void> signUpWithEmail(String email, String password) async {
+Future<void> verifyOTP(String email, String optController) async {
   final supabase = Supabase.instance.client; 
   // ignore: unused_local_variable
-  await supabase.auth.signUp(
+  await supabase.auth.verifyOTP(
   email: email,
-  password: password,
+  token: optController,
+  type : OtpType.signup,
  );
 } 
-
-
 
 
 

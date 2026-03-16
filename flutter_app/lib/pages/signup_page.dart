@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../login/sign_up.dart';
 import 'package:flutter_app/pages/login_page.dart';
+import '../pages/verify_otp.dart';
 
 
 class SignupPage extends StatefulWidget {
@@ -76,10 +77,9 @@ class _SignupPage extends State<SignupPage> {
                   );
                 if (!context.mounted) return;
                 // Success — send them to login
-                Navigator.pushAndRemoveUntil(
+                Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-                (route) => false,
+                MaterialPageRoute(builder: (context) => VerifyOtp(email: emailController.text))
                 );
                 } catch (e) {
                 if (!context.mounted) return;
@@ -96,9 +96,8 @@ class _SignupPage extends State<SignupPage> {
                 height: 20
               ), 
               ElevatedButton(onPressed: () { 
-                Navigator.pushAndRemoveUntil(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
-                   (route) => false,
+                Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LoginPage())
                 );
               },
               child: Text("Login") 

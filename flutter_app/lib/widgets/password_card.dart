@@ -25,7 +25,7 @@ class _PasswordCardState extends State<PasswordCard>{
           borderRadius: BorderRadius.circular(10), 
           ),
           child: Container(
-            height: 120,
+            height: 180,
             width: double.infinity, 
             padding: const EdgeInsets.all(10),
             child: Column(
@@ -33,8 +33,15 @@ class _PasswordCardState extends State<PasswordCard>{
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  widget.entry.website, 
+                  widget.entry.website,
                   style: const TextStyle(
+                    fontSize : 30, 
+                    color: Colors.white
+                  )
+                  ),
+                  Text(
+                    widget.entry.username, 
+                    style: const TextStyle(
                     fontSize : 22, 
                     color: Colors.white
                   )
@@ -54,7 +61,7 @@ class _PasswordCardState extends State<PasswordCard>{
                     color: Colors.white),
                   ),
             )
-              ]
+            ]
           )
         )
         )
