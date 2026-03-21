@@ -26,7 +26,7 @@ class _AddNewSitesState extends State<AddNewSites> {
     if (!formKey.currentState!.validate()) return;
 
     try {
-      final newEntry = await insertPassword(
+      await insertPassword(
         website : websiteName.text.trim(),
         username: username.text.trim(),
         password: password.text,
@@ -35,11 +35,14 @@ class _AddNewSitesState extends State<AddNewSites> {
 
       if (!context.mounted) return;
       Navigator.push(
+                  // ignore: use_build_context_synchronously
                   context,
                   MaterialPageRoute(builder: (context) => const HomePage()
-                  )); 
+                  ));
+                  
     } catch (e) {
       if (!context.mounted) return;
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error saving password: $e')),
       );

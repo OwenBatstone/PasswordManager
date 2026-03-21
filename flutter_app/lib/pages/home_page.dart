@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data_classes/password_entry.dart';
 import '../widgets/password_card.dart';
+import '../supabase_functions/delete_credentials.dart';
 import 'add_new_sites.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,7 +21,6 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     fetchPasswords();
   }
-
 
   Future<void> fetchPasswords() async {
     try {
@@ -48,6 +48,44 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> _confirmDelete(int id, int index) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Password'),
+        content: const Text('Are you sure you want to delete this entry?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !mounted) return;
+
+    try {
+      await deletePassword(id: id);
+      setState(() => passwords.removeAt(index));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password deleted')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error deleting: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,9 +100,12 @@ class _HomePageState extends State<HomePage> {
               : ListView.builder(
                   itemCount: passwords.length,
                   itemBuilder: (context, index) {
-                    return PasswordCard(entry: passwords[index]);
+                    return PasswordCard(
+                      entry: passwords[index],
+                      onDelete: () => _confirmDelete(passwords[index].id, index),
+                    );
                   },
-                ), 
+                ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final newEntry = await Navigator.push<PasswordEntry>(
@@ -79,4 +120,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-} 
+}
