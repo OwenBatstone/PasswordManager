@@ -3,7 +3,7 @@
 class PasswordEntry {
   final int id;
   final String website;
-  final String password;
+  String password; //Made password mutable
   final String username; 
 
   PasswordEntry({

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../login/sign_up.dart';
 import 'package:flutter_app/pages/login_page.dart';
 import '../pages/verify_otp.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'session.dart';
 
 
 class SignupPage extends StatefulWidget {
@@ -75,6 +78,8 @@ class _SignupPage extends State<SignupPage> {
                     emailController.text.trim(),
                     passwordController.text,
                   );
+                  final passwordHash = sha256.convert(utf8.encode(password)).toString(); //Ceate password hash
+                  Session.passwordHash = passwordHash; //Set session password variable singleton to store the hash 
                 if (!context.mounted) return;
                 // Success — send them to login
                 Navigator.push(

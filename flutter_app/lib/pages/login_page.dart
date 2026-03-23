@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/login/sign_in.dart';
 import 'package:flutter_app/pages/nav_bar.dart';
 import 'package:flutter_app/pages/signup_page.dart';
-
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+import 'session.dart';
 
 
 class LoginPage extends StatefulWidget{ 
@@ -30,9 +32,9 @@ Future<void> _loginStates() async {
   try{
     final email = emailController.text.trim(); 
     final password = passwordController.text;
-    
+    final passwordHash = sha256.convert(utf8.encode(password)).toString();
     await signInWithEmail(email, password);
-
+    Session.passwordHash = passwordHash;
     if (mounted) { 
         Navigator.push(
           context,

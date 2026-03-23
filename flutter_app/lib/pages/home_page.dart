@@ -4,6 +4,8 @@ import '../data_classes/password_entry.dart';
 import '../widgets/password_card.dart';
 import '../supabase_functions/delete_credentials.dart';
 import 'add_new_sites.dart';
+import 'session.dart';
+import 'aes_encryption.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,23 +21,27 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    final userPasswordHash = Session.passwordHash!;
     fetchPasswords();
   }
 
-  Future<void> fetchPasswords() async {
+  Future<void> fetchPasswords() async { //Gets all user passwords
     try {
       final supabase = Supabase.instance.client;
       final userId = supabase.auth.currentUser!.id;
 
-      final response = await supabase
+      final response = await supabase //gets all passwords belogining to the user
           .from('passwords')
           .select()
           .eq('user_id', userId);
 
-      setState(() {
+      setState(() { //
         passwords = (response as List)
             .map((e) => PasswordEntry.fromMap(e))
             .toList();
+        passwords.forEach((p) => {                  //Decrypts passwords using AES functions
+          p.password = aesDecrypt(p.password, createAesKey(userPasswordHash, userId, p.service_name)); 
+        });
         isLoading = false;
       });
     } catch (e) {
