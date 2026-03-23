@@ -1,7 +1,7 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide Session;
 import '../data_classes/password_entry.dart';
-import 'aes_encryption.dart';
-import 'session.dart';
+import '../utils/aes_encryption.dart';
+import '../session/session.dart';
 
 Future<PasswordEntry> insertPassword({
   required String website,

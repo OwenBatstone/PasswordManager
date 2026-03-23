@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide Session;
 import '../data_classes/password_entry.dart';
 import '../widgets/password_card.dart';
 import '../supabase_functions/delete_credentials.dart';
 import 'add_new_sites.dart';
-import 'session.dart';
-import 'aes_encryption.dart';
+import '../session/session.dart';
+import '../utils/aes_encryption.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,42 +17,52 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<PasswordEntry> passwords = [];
   bool isLoading = true;
+  late String userPasswordHash;
 
   @override
   void initState() {
     super.initState();
-    final userPasswordHash = Session.passwordHash!;
+    userPasswordHash = Session.passwordHash!;
     fetchPasswords();
   }
 
-  Future<void> fetchPasswords() async { //Gets all user passwords
-    try {
-      final supabase = Supabase.instance.client;
-      final userId = supabase.auth.currentUser!.id;
+  Future<void> fetchPasswords() async {
+  try {
+    final supabase = Supabase.instance.client;
+    final user = supabase.auth.currentUser;
+    if (user == null) {
+      throw Exception("User not Found");
+    }
+    final userId = user.id;
 
-      final response = await supabase //gets all passwords belogining to the user
-          .from('passwords')
-          .select()
-          .eq('user_id', userId);
+    final List<dynamic> response = await supabase
+        .from('passwords')
+        .select()
+        .eq('user_id', userId);
 
-      setState(() { //
-        passwords = (response as List)
-            .map((e) => PasswordEntry.fromMap(e))
-            .toList();
-        passwords.forEach((p) => {                  //Decrypts passwords using AES functions
-          p.password = aesDecrypt(p.password, createAesKey(userPasswordHash, userId, p.service_name)); 
-        });
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() => isLoading = false);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Error fetching passwords: $e")),
+    setState(() {
+      passwords = (response )
+          .map((e) => PasswordEntry.fromMap(e))
+          .toList();
+      
+      for (final p in passwords) {
+        p.password = aesDecrypt(
+          p.password,
+          createAesKey(userPasswordHash, userId, p.website),
         );
       }
+      
+      isLoading = false;
+    });
+  } catch (e) {
+    setState(() => isLoading = false);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error fetching passwords: $e")),
+      );
     }
   }
+}
 
   Future<void> _confirmDelete(int id, int index) async {
     final confirmed = await showDialog<bool>(

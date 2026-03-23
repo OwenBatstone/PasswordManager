@@ -9,7 +9,7 @@ import 'dart:typed_data';
 String aesEncrypt(String plaintext, Uint8List key) {
 
   final k = Key(key);
-  final iv = IV.fromLength(16);
+  final iv = IV.fromSecureRandom(16); //changed to use a secure random number gen for IV
 
   final encrypter = Encrypter(AES(k)); //https://pub.dev/documentation/encrypt/latest/encrypt/Encrypter-class.html
 
@@ -20,12 +20,16 @@ String aesEncrypt(String plaintext, Uint8List key) {
 
 //Decrypts ciphertext using the key
 String aesDecrypt(String encryptedText, Uint8List key) {
+  final parts = encryptedText.split(':');
+  final iv = IV.fromBase64(parts[0]);
+  final ciphertext = parts[1];//second half of string after IV
+
   final k = Key(key);
-  final iv = IV.fromLength(16);
+  
 
   final encrypter = Encrypter(AES(k));
 
-  return encrypter.decrypt(Encrypted.fromBase64(encryptedText), iv : iv);
+  return encrypter.decrypt(Encrypted.fromBase64(ciphertext), iv : iv);
 }
 
 //Creates a secure AES key using the hash of 3 strings

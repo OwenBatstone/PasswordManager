@@ -4,8 +4,7 @@ import 'package:flutter_app/pages/nav_bar.dart';
 import 'package:flutter_app/pages/signup_page.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
-import 'session.dart';
-
+import '../session/session.dart';
 
 class LoginPage extends StatefulWidget{ 
   const LoginPage({super.key});
@@ -127,7 +126,6 @@ Widget build(BuildContext context) {
                   
                 },
                 child: const Text("Sign up"),
-                
                 )
           ],
         ),
