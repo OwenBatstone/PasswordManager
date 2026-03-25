@@ -53,8 +53,10 @@ class _AddNewSitesState extends State<AddNewSites> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         backgroundColor: Colors.blue,
         title: const Text("Add Password"),
+        automaticallyImplyLeading: false,
       ),
       body: Container(
         alignment: Alignment.topCenter,

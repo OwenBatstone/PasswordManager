@@ -108,6 +108,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: const Text("Password Manager"),
+        automaticallyImplyLeading: false,
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -122,18 +123,18 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                 ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final newEntry = await Navigator.push<PasswordEntry>(
-            context,
-            MaterialPageRoute(builder: (context) => const AddNewSites()),
-          );
-          if (newEntry != null) {
-            setState(() => passwords.add(newEntry));
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //     final newEntry = await Navigator.push<PasswordEntry>(
+      //       context,
+      //       MaterialPageRoute(builder: (context) => const AddNewSites()),
+      //     );
+      //     if (newEntry != null) {
+      //       setState(() => passwords.add(newEntry));
+      //     }
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }

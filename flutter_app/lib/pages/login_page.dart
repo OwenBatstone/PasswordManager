@@ -6,50 +6,44 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import '../session/session.dart';
 
-class LoginPage extends StatefulWidget{ 
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
-  
 }
 
+class _LoginPageState extends State<LoginPage> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool _isLoading = false;
 
-class _LoginPageState extends State<LoginPage> { 
+  Future<void> _loginStates() async {
+    if (!formKey.currentState!.validate()) return;
 
-
-final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-final TextEditingController emailController = TextEditingController(); 
-final TextEditingController passwordController = TextEditingController();
-bool _isLoading = false; 
-
-
-Future<void> _loginStates() async { 
-  if (!formKey.currentState!.validate()) return; 
-
-  setState(() => _isLoading = true);
-  try{
-    final email = emailController.text.trim(); 
-    final password = passwordController.text;
-    final passwordHash = sha256.convert(utf8.encode(password)).toString();
-    await signInWithEmail(email, password);
-    Session.passwordHash = passwordHash;
-    if (mounted) { 
+    setState(() => _isLoading = true);
+    try {
+      final email = emailController.text.trim();
+      final password = passwordController.text;
+      final passwordHash = sha256.convert(utf8.encode(password)).toString();
+      await signInWithEmail(email, password);
+      Session.passwordHash = passwordHash;
+      if (mounted) {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => NavBar()),
         );
       }
-    } catch (e) { 
-      if (mounted) { 
+    } catch (e) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login failed: ${e.toString()}')), 
+          SnackBar(content: Text('Login failed: ${e.toString()}')),
         );
       }
-    } finally { 
+    } finally {
       if (mounted) setState(() => _isLoading = false);
     }
-
   }
 
   @override
@@ -59,81 +53,70 @@ Future<void> _loginStates() async {
     super.dispose();
   }
 
-
-
-@override
-Widget build(BuildContext context) { 
-  return Scaffold(
-    appBar: AppBar(
-      backgroundColor: Colors.blue,
-      title: const Text('Login')
-    ),
-    body : Padding(
-      padding: EdgeInsets.all(10),
-      child: Form(
-        key: formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFormField(
-              controller: emailController,
-              decoration: const InputDecoration(
-                labelText: "Email"
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        title: const Text('Login'),
+        automaticallyImplyLeading: false,
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(10),
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextFormField(
+                controller: emailController,
+                decoration: const InputDecoration(labelText: "Email"),
+                //Validator to check for something
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Enter Email";
+                  }
+                  return null;
+                },
               ),
-              //Validator to check for something
-              validator: (value) {
-                if(value == null || value.isEmpty)
-                {
-                  return "Enter Email";
-                }
-                return null;  
-              },
-              
-            ),
-            const SizedBox( 
-              height : 20
-              ),
+              const SizedBox(height: 20),
               TextFormField(
                 controller: passwordController,
                 obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: "Password"
-                ),
-                validator: (value) { 
-                  if( value == null || value.isEmpty){ 
+                decoration: const InputDecoration(labelText: "Password"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
                     return "Enter Password";
                   }
                   return null;
-                }
-                ),
-                const SizedBox(height: 20), 
-                //elevated button for submit information
-                ElevatedButton(onPressed:_isLoading ? null : _loginStates,
-                child: _isLoading 
-                ?const SizedBox(
-                  height: 20, 
-                  width: 20, 
-                  child : CircularProgressIndicator(strokeWidth: 2 ),
-                  )
-                  : const Text("Login"),
-                  ),
-                const SizedBox(height: 20), 
-                ElevatedButton(onPressed: (){  
-                 Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SignupPage()
-                  ));
-                  
+                },
+              ),
+              const SizedBox(height: 20),
+              //elevated button for submit information
+              ElevatedButton(
+                onPressed: _isLoading ? null : _loginStates,
+                child: _isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Text("Login"),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SignupPage()),
+                  );
                 },
                 child: const Text("Sign up"),
-                )
-          ],
+              ),
+            ],
+          ),
         ),
       ),
-      )
-  );
-
-}
-
-
+    );
+  }
 }
