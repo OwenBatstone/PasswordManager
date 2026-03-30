@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/pages/home_page.dart';
 import '../supabase_functions/insert_credentials.dart';
+
 class AddNewSites extends StatefulWidget {
-  const AddNewSites({super.key});
+  final VoidCallback? onSaved;
+  const AddNewSites({super.key, this.onSaved});
 
   @override
   State<AddNewSites> createState() => _AddNewSitesState();
@@ -27,22 +28,21 @@ class _AddNewSitesState extends State<AddNewSites> {
 
     try {
       await insertPassword(
-        website : websiteName.text.trim(),
+        website: websiteName.text.trim(),
         username: username.text.trim(),
         password: password.text,
-
       );
 
       if (!context.mounted) return;
-      Navigator.push(
-                  // ignore: use_build_context_synchronously
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()
-                  ));
-                  
+
+      websiteName.clear();
+      username.clear();
+      password.clear();
+
+      widget.onSaved?.call();
+
     } catch (e) {
       if (!context.mounted) return;
-      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error saving password: $e')),
       );
@@ -53,7 +53,6 @@ class _AddNewSitesState extends State<AddNewSites> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: Colors.blue,
         title: const Text("Add Password"),
         automaticallyImplyLeading: false,
